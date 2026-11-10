@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#12a4ec">
+<title>Leburić rokovi</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Leburić">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#fff9ec; --card:#ffffff; --ink:#22294a; --muted:#6c7391; --line:#ebe6f5;
+  --a1:#12a4ec; --a2:#5a6ff5; --accent:#2f7fe8; --accent-bg:#e6f3ff;
+  --isteklo:#f0443e; --isteklo-bg:#ffe9e7; --isteklo-tx:#c9251f;
+  --hitno:#ff8a1f;   --hitno-bg:#fff0dd;   --hitno-tx:#b85400;
+  --uskoro:#f2c200;  --uskoro-bg:#fff8cf;  --uskoro-tx:#7d6200;
+  --ok:#2ec66d;      --ok-bg:#e6f9ed;      --ok-tx:#18803f;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;min-height:100%}
+body{
+  background:var(--bg);color:var(--ink);
+  font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-tap-highlight-color:transparent;
+}
+header{
+  position:sticky;top:0;z-index:5;color:#fff;
+  background:linear-gradient(120deg,var(--a1),var(--a2));
+  display:flex;align-items:center;gap:6px;padding:14px 16px;min-height:58px;
+  border-radius:0 0 22px 22px;box-shadow:0 6px 18px rgba(64,120,240,.28);
+}
+header h1{font-size:19px;margin:0;font-weight:800;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+header button{background:none;border:0;color:inherit;font-size:24px;line-height:1;padding:4px 10px;margin:0 -6px}
+main{padding:16px 16px 110px;max-width:640px;margin:0 auto}
+nav{
+  position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--card);
+  display:flex;padding:6px 6px calc(6px + env(safe-area-inset-bottom));
+  border-radius:22px 22px 0 0;box-shadow:0 -6px 20px rgba(60,70,140,.12);
+}
+nav button{
+  flex:1;background:none;border:0;color:var(--muted);font:inherit;font-size:12px;font-weight:700;
+  padding:7px 2px 6px;border-radius:16px;position:relative;
+}
+nav button i{display:block;font-style:normal;font-size:21px;line-height:1.25}
+nav button.akt{color:var(--accent);background:var(--accent-bg)}
+nav .zn{
+  position:absolute;top:2px;left:50%;margin-left:8px;min-width:19px;padding:0 5px;border-radius:10px;
+  background:var(--isteklo);color:#fff;font-size:11px;line-height:19px;
+}
+
+.zbir{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.zbir div{border-radius:18px;padding:12px 6px;text-align:center}
+.zbir b{display:block;font-size:30px;line-height:1.1;font-weight:800}
+.zbir small{font-size:12px;font-weight:700}
+.zbir .isteklo{background:var(--isteklo-bg);color:var(--isteklo-tx)}
+.zbir .hitno{background:var(--hitno-bg);color:var(--hitno-tx)}
+.zbir .uskoro{background:var(--uskoro-bg);color:var(--uskoro-tx)}
+
+.bravo{
+  background:var(--ok-bg);color:var(--ok-tx);border-radius:18px;padding:14px 16px;margin-bottom:14px;
+  font-weight:700;
+}
+
+h2.grupa{font-size:13px;text-transform:uppercase;letter-spacing:.05em;margin:20px 0 8px;color:var(--muted);font-weight:800}
+h2.grupa.isteklo{color:var(--isteklo-tx)} h2.grupa.hitno{color:var(--hitno-tx)}
+h2.grupa.uskoro{color:var(--uskoro-tx)} h2.grupa.ok{color:var(--ok-tx)}
+
+.red{
+  display:flex;align-items:center;gap:10px;width:100%;text-align:left;font:inherit;color:inherit;
+  background:var(--card);border:0;border-left:7px solid var(--line);border-radius:16px;
+  padding:12px 13px;margin-bottom:9px;min-height:60px;box-shadow:0 2px 8px rgba(60,70,140,.07);
+}
+.red.isteklo{border-left-color:var(--isteklo);background:var(--isteklo-bg)}
+.red.hitno{border-left-color:var(--hitno);background:var(--hitno-bg)}
+.red.uskoro{border-left-color:var(--uskoro);background:var(--uskoro-bg)}
+.red.ok{border-left-color:var(--ok);background:var(--ok-bg)}
+.red .gl{flex:1;min-width:0}
+.red .gl b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.red small{display:block;color:var(--muted);font-size:13px}
+.red .ds{text-align:right;white-space:nowrap}
+.red.isteklo .ds small{color:var(--isteklo-tx);font-weight:700}
+.red.hitno .ds small{color:var(--hitno-tx);font-weight:700}
+.red.uskoro .ds small{color:var(--uskoro-tx);font-weight:700}
+.red.ok .ds small{color:var(--ok-tx);font-weight:700}
+.red .str{color:var(--muted);font-size:22px}
+.red .ob{text-align:right;white-space:nowrap}
+.red .ob b{display:block}
+.red em{font-style:normal;font-weight:700}
+.red em.isteklo{color:var(--isteklo-tx)} .red em.hitno{color:var(--hitno-tx)} .red em.uskoro{color:var(--uskoro-tx)}
+.red .unutra{
+  flex:1;min-width:0;display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;
+  font:inherit;color:inherit;text-align:left;
+}
+.red.gotov .unutra{opacity:.5}
+.kv{
+  flex:none;width:42px;height:42px;border-radius:50%;border:3px solid #b6bdd8;background:#fff;
+  color:#fff;font:inherit;font-size:24px;font-weight:800;line-height:1;padding:0;
+}
+.kv.da{background:var(--ok);border-color:var(--ok)}
+.napredak{background:var(--card);border-radius:18px;padding:13px 16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(60,70,140,.07)}
+.napredak b{display:block;margin-bottom:8px}
+.napredak span{display:block;height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.napredak i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--a1),var(--a2))}
+.napredak.sve{background:var(--ok-bg);color:var(--ok-tx)}
+.napredak.sve i{background:var(--ok)}
+.danas{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;border:0;font:inherit;
+  color:#fff;background:linear-gradient(120deg,var(--a1),var(--a2));border-radius:18px;padding:14px 16px;
+  margin-bottom:14px;font-weight:700;text-align:left;box-shadow:0 5px 14px rgba(64,120,240,.3);
+}
+.danas.sve{background:var(--ok)}
+.kopija{
+  display:block;width:100%;text-align:left;border:0;font:inherit;font-weight:700;
+  background:var(--uskoro-bg);color:var(--uskoro-tx);border-radius:18px;padding:13px 16px;margin-bottom:14px;
+}
+label.chk{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--ink);font-weight:400}
+label.chk input{width:22px;height:22px;min-height:0;margin:0;flex:none}
+.tri{display:flex;gap:8px}
+.tri .btn{flex:1;padding:12px 4px;min-height:46px;font-size:14px}
+#por-tekst{min-height:170px;font-size:16px;line-height:1.35}
+.lbl{font-size:13px;color:var(--muted);font-weight:700;margin-bottom:5px}
+.dani{display:flex;gap:5px;margin-bottom:12px}
+.dan{flex:1;margin:0;position:relative}
+.dan input{position:absolute;opacity:0;width:1px;height:1px;min-height:0;margin:0;padding:0}
+.dan span{
+  display:block;text-align:center;padding:11px 0;border:2px solid var(--line);border-radius:12px;
+  background:var(--card);font-size:13px;font-weight:700;color:var(--muted);
+}
+.dan input:checked+span{background:linear-gradient(120deg,var(--a1),var(--a2));border-color:transparent;color:#fff}
+
+.btn{
+  background:linear-gradient(120deg,var(--a1),var(--a2));color:#fff;border:0;border-radius:16px;font:inherit;
+  font-weight:800;padding:14px 16px;min-height:50px;box-shadow:0 5px 14px rgba(64,120,240,.3);
+}
+.btn.sek{background:var(--card);color:var(--ink);border:2px solid var(--line);box-shadow:none}
+.btn.opasno{background:var(--isteklo-bg);color:var(--isteklo-tx);box-shadow:none}
+.btn.sir{width:100%;margin-bottom:14px}
+.dva{display:flex;gap:10px;margin-bottom:12px}
+.dva .btn{flex:1}
+.mali-brisi{
+  display:block;margin:16px auto 0;background:none;border:0;font:inherit;font-size:13px;
+  color:var(--muted);text-decoration:underline;padding:8px 12px;
+}
+
+input,select,textarea{
+  width:100%;font:inherit;color:var(--ink);background:var(--card);
+  border:2px solid var(--line);border-radius:14px;padding:12px;min-height:50px;
+}
+textarea{min-height:90px;font-size:16px}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--a1)}
+button:focus-visible{outline:3px solid var(--a1);outline-offset:2px}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:12px;font-weight:700}
+label input,label select,label textarea{margin-top:5px;font-weight:400}
+
+.prazno{text-align:center;color:var(--muted);padding:34px 12px}
+.prazno i{display:block;font-style:normal;font-size:46px;margin-bottom:6px}
+.prazno b{display:block;color:var(--ink);font-size:18px;margin-bottom:6px}
+.kart{background:var(--card);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(60,70,140,.07)}
+.kart h3{margin:0 0 6px;font-size:16px}
+.kart p{margin:0 0 12px;color:var(--muted);font-size:14px}
+.upoz{background:var(--isteklo);color:#fff;border-radius:16px;padding:12px 14px;margin-bottom:14px;font-size:14px;font-weight:600}
+.info{color:var(--muted);font-size:14px;margin:-2px 0 12px}
+
+#sheet{position:fixed;left:0;right:0;top:0;height:100%;z-index:20;display:flex;align-items:flex-start;justify-content:center}
+#sheet .poz{position:absolute;inset:0;background:rgba(34,41,74,.45)}
+#sheet form{
+  position:relative;background:var(--bg);width:100%;max-width:640px;max-height:100%;
+  display:flex;flex-direction:column;border-radius:0 0 24px 24px;
+  padding:calc(16px + env(safe-area-inset-top)) 14px 14px;box-shadow:0 10px 30px rgba(34,41,74,.25);
+}
+#sheet h2{margin:0 2px 12px;font-size:19px;font-weight:800;flex:none}
+#sheet .telo{flex:1 1 auto;min-height:0;overflow:auto;padding:2px}
+#sheet .dno{flex:none;padding:8px 2px 0}
+#sheet .dugmad{display:flex;gap:10px}
+#sheet .dugmad .btn{flex:1}
+#sheet .brisi{width:100%;margin-top:10px}
+#sheet .mali-brisi{margin-top:8px}
+.par{display:grid;grid-template-columns:1.5fr 1fr;gap:10px}
+.izbor{max-height:172px;overflow:auto;margin:-4px 0 12px;border:2px solid var(--line);border-radius:14px;background:var(--card)}
+.opc{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;font:inherit;color:inherit;padding:11px 12px}
+.opc:last-child{border-bottom:0}
+.opc small{color:var(--muted);margin-left:6px}
+.izbor p{margin:0;padding:11px 12px;color:var(--muted);font-size:14px}
+input.izabran{border-color:var(--ok);background:var(--ok-bg);font-weight:700}
+
+#toast{
+  position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top));transform:translateX(-50%);z-index:30;
+  background:var(--ink);color:#fff;padding:11px 18px;border-radius:22px;font-size:14px;font-weight:600;
+  width:max-content;max-width:90%;text-align:center;box-shadow:0 6px 18px rgba(34,41,74,.3);
+}
+</style>
+</head>
+<body>
+<header id="hdr"></header>
+<main id="main"></main>
+<nav id="nav"></nav>
+<div id="sheet" hidden></div>
+<div id="toast" hidden></div>
+
+<script>
+'use strict';
+
+/* ---------- podaci ---------- */
+const KEY = 'leburic_db_v1';
+let cuvanjeRadi = true;
+
+function prazna(){
+  return {artikli:[], marketi:[], stavke:[], postavke:{crveno:7, zuto:30}};
+}
+function ucitaj(){
+  try{
+    localStorage.setItem(KEY+'_t','1'); localStorage.removeItem(KEY+'_t');
+    const r = localStorage.getItem(KEY);
+    if(r){
+      const d = JSON.parse(r), p = prazna();
+      return {
+        artikli: Array.isArray(d.artikli)?d.artikli:[],
+        marketi: Array.isArray(d.marketi)?d.marketi:[],
+        stavke: Array.isArray(d.stavke)?d.stavke:[],
+        postavke: Object.assign(p.postavke, d.postavke||{})
+      };
+    }
+  }catch(e){ cuvanjeRadi = false; }
+  return prazna();
+}
+let db = ucitaj();
+function sacuvaj(){
+  try{ localStorage.setItem(KEY, JSON.stringify(db)); cuvanjeRadi = true; }
+  catch(e){ cuvanjeRadi = false; }
+}
+
+/* ---------- pomoćne ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const num = v => { const n = parseFloat(String(v).replace(',','.')); return isNaN(n)?0:n; };
+const kolF = n => +(+n).toFixed(3);
+const poNazivu = (a,b) => a.naziv.localeCompare(b.naziv,'bs');
+const poRoku = (a,b) => a.rok<b.rok?-1:a.rok>b.rok?1:0;
+const dva = n => String(n).padStart(2,'0');
+
+function danasStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+dva(d.getMonth()+1)+'-'+dva(d.getDate());
+}
+function dani(rok){
+  const p = rok.split('-').map(Number);
+  const a = new Date(p[0], p[1]-1, p[2]);
+  const n = new Date();
+  const b = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+  return Math.round((a-b)/864e5);
+}
+function stat(d){
+  const p = db.postavke;
+  return d<0 ? 'isteklo' : d<=p.crveno ? 'hitno' : d<=p.zuto ? 'uskoro' : 'ok';
+}
+/* datum se čuva kao gggg-mm-dd, a piše i čita kao dd.mm.gggg */
+function fmt(rok){ const p = rok.split('-'); return p[2]+'.'+p[1]+'.'+p[0]; }
+function parseDatum(t){
+  t = String(t||'').trim();
+  let p;
+  if(/^\d{8}$/.test(t)) p = [t.slice(0,2), t.slice(2,4), t.slice(4)];
+  else p = t.split(/[.\/\-\s]+/).filter(Boolean);
+  if(p.length!==3 || p.some(x => !/^\d+$/.test(x))) return null;
+  const d = +p[0], m = +p[1];
+  let y = +p[2];
+  if(p[2].length===2) y += 2000;
+  else if(p[2].length!==4) return null;
+  const dt = new Date(y, m-1, d);
+  if(dt.getFullYear()!==y || dt.getMonth()!==m-1 || dt.getDate()!==d) return null;
+  return y+'-'+dva(m)+'-'+dva(d);
+}
+/* dok kucaš cifre, tačke se same dodaju, a nemoguć dan, mjesec ili godina se ne mogu ukucati */
+const DANA_U_MJ = [31,29,31,30,31,30,31,31,30,31,30,31];
+function sredjujDatum(el, brise){
+  const c = el.value.replace(/[\/,\-\s]/g,'.').replace(/[^\d.]/g,'')
+    .replace(/(^|\.)(\d)(?=\.)/g,'$10$2').replace(/\D/g,'');
+  let dd = '', mm = '', yy = '', msg = '';
+  for(const ch of c){
+    if(dd.length<2){
+      if(!dd) dd = (!brise && ch>'3') ? '0'+ch : ch;
+      else if(+(dd+ch)>=1 && +(dd+ch)<=31) dd += ch;
+      else { msg = 'Dan može biti od 01 do 31'; break; }
+    }else if(mm.length<2){
+      if(!mm) mm = (!brise && ch>'1') ? '0'+ch : ch;
+      else if(+(mm+ch)>=1 && +(mm+ch)<=12) mm += ch;
+      else { msg = 'Mjesec može biti od 01 do 12'; break; }
+      if(mm.length===2 && +dd>DANA_U_MJ[+mm-1]){ msg = 'Taj mjesec nema '+(+dd)+' dana'; mm = ''; break; }
+    }else if(yy.length<4){
+      if((!yy && ch!=='2') || (yy.length===1 && ch!=='0')){ msg = 'Godina počinje sa 20'; break; }
+      yy += ch;
+      if(yy.length===4 && !parseDatum(dd+'.'+mm+'.'+yy)){ msg = 'Taj datum ne postoji'; yy = yy.slice(0,3); break; }
+    }else break;
+  }
+  let v = dd;
+  if(dd.length===2 && (mm || !brise)) v += '.';
+  v += mm;
+  if(mm.length===2 && (yy || !brise)) v += '.';
+  v += yy;
+  if(el.value!==v) el.value = v;
+  if(msg) toast(msg);
+}
+function uzmiRok(t, stari){
+  const r = parseDatum(t);
+  if(!r){ toast('Upiši rok kao dd.mm.gggg, npr. 05.03.2027'); return null; }
+  if(r!==stari && dani(r)<0 && !confirm('Rok '+fmt(r)+' je već prošao. Upisati svejedno?')) return null;
+  return r;
+}
+function opis(d){
+  if(d<0) return d===-1 ? 'istekao juče' : 'istekao prije '+(-d)+' dana';
+  if(d===0) return 'ističe danas';
+  if(d===1) return 'ističe sutra';
+  return 'još '+d+' dana';
+}
+function brArt(n){
+  const j = n%10, s = n%100;
+  if(j===1 && s!==11) return n+' artikal';
+  if(j>=2 && j<=4 && (s<12 || s>14)) return n+' artikla';
+  return n+' artikala';
+}
+/* pretraga: svaka ukucana riječ mora biti u nazivu ili šifri, sa ili bez kvačica */
+const norm = s => String(s||'').toLowerCase().replace(/đ/g,'dj').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+function nadjiArtikle(q){
+  const r = norm(q).split(/\s+/).filter(Boolean);
+  return db.artikli.filter(a => { const t = norm(a.naziv+' '+(a.sifra||'')); return r.every(x => t.includes(x)); }).sort(poNazivu);
+}
+const art = id => db.artikli.find(a => a.id===id);
+const mkt = id => db.marketi.find(m => m.id===id);
+
+let toastT;
+function toast(t){
+  const el = $('#toast'); el.textContent = t; el.hidden = false;
+  clearTimeout(toastT); toastT = setTimeout(() => el.hidden = true, 2800);
+}
+
+/* sva roba u marketima, poredana po roku */
+function redovi(){
+  const r = [];
+  db.stavke.forEach(s => {
+    const a = art(s.artikalId), m = mkt(s.marketId);
+    if(!a || !m) return;
+    const d = dani(s.rok);
+    r.push({id:s.id, aid:a.id, mid:m.id, naziv:a.naziv, mjesto:m.naziv, rok:s.rok, kol:s.kol, d:d, s:stat(d), ob:s.obidjen||''});
+  });
+  return r.sort(poRoku);
+}
+function redHtml(x, bezMjesta){
+  return '<button class="red '+x.s+'" data-act="uredi-stavku" data-id="'+x.id+'">'
+    + '<span class="gl"><b>'+esc(x.naziv)+'</b><small>'+(bezMjesta?'':esc(x.mjesto)+' · ')+'kol. '+kolF(x.kol)+'</small></span>'
+    + '<span class="ds"><b>'+fmt(x.rok)+'</b><small>'+opis(x.d)+'</small></span></button>';
+}
+
+/* red u marketu: kvačica pamti DATUM obilaska, pa je sutra sama opet prazna */
+function redMarket(x){
+  const da = x.ob===danasStr();
+  return '<div class="red '+x.s+(da?' gotov':'')+'">'
+    + '<button class="kv'+(da?' da':'')+'" data-act="kvacica" data-id="'+x.id+'" aria-pressed="'+da+'" aria-label="Obiđeno: '+esc(x.naziv)+'">'+(da?'✓':'')+'</button>'
+    + '<button class="unutra" data-act="uredi-stavku" data-id="'+x.id+'">'
+    + '<span class="gl"><b>'+esc(x.naziv)+'</b><small>kol. '+kolF(x.kol)+'</small></span>'
+    + '<span class="ds"><b>'+fmt(x.rok)+'</b><small>'+opis(x.d)+'</small></span></button></div>';
+}
+/* dani obilaska: brojevi kao u JS-u (0 = nedjelja); bez izbora znači svaki dan */
+const DANI = [[1,'Pon'],[2,'Uto'],[3,'Sri'],[4,'Čet'],[5,'Pet'],[6,'Sub'],[0,'Ned']];
+const imaDane = m => Array.isArray(m.dani) && m.dani.length>0;
+const naRedu = m => !imaDane(m) || m.dani.includes(new Date().getDay());
+const daniTxt = m => imaDane(m) ? DANI.filter(d => m.dani.includes(d[0])).map(d => d[1]).join(', ') : 'svaki dan';
+function obilazak(m, sve){
+  const st = (sve||redovi()).filter(x => x.mid===m.id), dan = danasStr();
+  return {st:st, n:st.length, ob:st.filter(x => x.ob===dan).length};
+}
+function danasKart(){
+  const sve = redovi();
+  const l = db.marketi.filter(naRedu).map(m => obilazak(m, sve)).filter(o => o.n);
+  if(!l.length) return '';
+  const got = l.filter(o => o.ob===o.n).length;
+  return '<button class="danas'+(got===l.length?' sve':'')+'" data-act="tab" data-tab="marketi">'
+    + '<span>'+(got===l.length?'✅ Svi današnji marketi obiđeni':'🚚 Danas na redu: '+l.length+(l.length===1?' market':' marketa'))+'</span>'
+    + '<span>'+got+'/'+l.length+' ›</span></button>';
+}
+
+/* podsjetnik: ako kopija podataka nije sačuvana 7 ili više dana */
+function kopijaUpoz(){
+  const p = db.postavke, baza = p.kopija || p.prvi;
+  if(!baza || (!db.artikli.length && !db.marketi.length)) return '';
+  const n = -dani(baza);
+  if(n<7) return '';
+  return '<button class="kopija" data-act="tab" data-tab="podaci">💾 '
+    + (p.kopija ? 'Kopija podataka je stara '+n+' dana.' : 'Još nemaš sačuvanu kopiju podataka.')
+    + ' <u>Sačuvaj kopiju</u></button>';
+}
+/* tekst poruke o rokovima za jedan market ili za sve */
+function porukaTekst(marketId, iUskoro){
+  const sve = redovi().filter(x => (!marketId || x.mid===marketId)
+    && (x.s==='isteklo' || x.s==='hitno' || (iUskoro && x.s==='uskoro')));
+  if(!sve.length) return '';
+  const lin = ['Rokovi trajanja, '+fmt(danasStr())];
+  const grupe = [['isteklo','Isteklo:'],['hitno','Ističe uskoro:'],['uskoro','Ističe do '+db.postavke.zuto+' dana:']];
+  db.marketi.slice().sort(poNazivu).forEach(m => {
+    const st = sve.filter(x => x.mid===m.id);
+    if(!st.length) return;
+    lin.push('', m.naziv.toUpperCase()+(m.adresa?' ('+m.adresa+')':''));
+    grupe.forEach(g => {
+      const l = st.filter(x => x.s===g[0]);
+      if(!l.length) return;
+      lin.push(g[1]);
+      l.forEach(x => lin.push('• '+x.naziv+', '+kolF(x.kol)+' kom, rok '+fmt(x.rok)+(x.d>=0?' ('+opis(x.d)+')':'')));
+    });
+  });
+  return lin.join('\n');
+}
+
+/* ---------- stanje ekrana ---------- */
+const S = {tab:'rokovi', q:'', marketId:null};
+let gurnuto = false;
+function guraj(){ try{ history.pushState({},''); gurnuto = true; }catch(e){ gurnuto = false; } }
+window.addEventListener('popstate', () => {
+  gurnuto = false;
+  if(!$('#sheet').hidden){ zatvoriSheet(); if(S.marketId) guraj(); return; }
+  S.marketId = null; render();
+});
+
+/* ---------- ekrani ---------- */
+function vRokovi(){
+  if(!db.artikli.length && !db.marketi.length){
+    return '<div class="prazno"><i>👋</i><b>Dobro došao!</b>Prvo upiši artikle iz Leburića, pa markete koje obilaziš.</div>'
+      + '<button class="btn sir" data-act="tab" data-tab="leburic">Upiši artikle</button>';
+  }
+  const r = redovi();
+  if(!r.length){
+    return '<div class="prazno"><i>🏪</i><b>Još nema robe u marketima</b>Otvori market i dodaj artikle sa rokom trajanja.</div>'
+      + '<button class="btn sir" data-act="tab" data-tab="marketi">Idi na markete</button>';
+  }
+  const br = {isteklo:0, hitno:0, uskoro:0, ok:0};
+  r.forEach(x => br[x.s]++);
+  const p = db.postavke;
+  let h = kopijaUpoz() + danasKart() + '<div class="zbir">'
+    + '<div class="isteklo"><b>'+br.isteklo+'</b><small>isteklo</small></div>'
+    + '<div class="hitno"><b>'+br.hitno+'</b><small>do '+p.crveno+' dana</small></div>'
+    + '<div class="uskoro"><b>'+br.uskoro+'</b><small>do '+p.zuto+' dana</small></div></div>';
+  if(!br.isteklo && !br.hitno) h += '<div class="bravo">🎉 Sve je pod kontrolom, ništa ne ističe u narednih '+p.crveno+' dana.</div>';
+  const nasl = {isteklo:'Isteklo', hitno:'Ističe do '+p.crveno+' dana', uskoro:'Ističe do '+p.zuto+' dana', ok:'Ima vremena'};
+  ['isteklo','hitno','uskoro','ok'].forEach(s => {
+    const g = r.filter(x => x.s===s);
+    if(!g.length) return;
+    h += '<h2 class="grupa '+s+'">'+nasl[s]+' ('+g.length+')</h2>' + g.map(x => redHtml(x)).join('');
+  });
+  return h + '<button class="btn sek sir" data-act="poruka-sve" style="margin-top:10px">✉️ Poruka o rokovima (svi marketi)</button>';
+}
+
+function listaArtikala(){
+  if(!db.artikli.length) return '<div class="prazno"><i>📦</i><b>Nema artikala</b>Upiši artikle koje Leburić ima u ponudi.</div>';
+  const l = nadjiArtikle(S.q);
+  if(!l.length) return '<div class="prazno">Nema artikla za „'+esc(S.q)+'".</div>';
+  const sve = redovi();
+  return l.map(a => {
+    const moji = sve.filter(x => x.aid===a.id);
+    const brM = new Set(moji.map(x => x.mid)).size;
+    const gdje = brM ? 'u '+brM+(brM===1?' marketu':' marketa') : 'nije ni u jednom marketu';
+    const desno = moji.length ? '<b>'+fmt(moji[0].rok)+'</b><small>'+opis(moji[0].d)+'</small>' : '';
+    return '<button class="red '+(moji.length?moji[0].s:'')+'" data-act="uredi-artikal" data-id="'+a.id+'">'
+      + '<span class="gl"><b>'+esc(a.naziv)+'</b><small>'+(a.sifra?esc(a.sifra)+' · ':'')+gdje+'</small></span>'
+      + '<span class="ds">'+desno+'</span></button>';
+  }).join('');
+}
+function vLeburic(){
+  return '<button class="btn sir" data-act="novi-artikal">+ Novi artikal</button>'
+    + (db.artikli.length>5 ? '<label>Traži<input id="q" value="'+esc(S.q)+'" placeholder="naziv ili šifra" autocomplete="off"></label>' : '')
+    + '<div id="lista">'+listaArtikala()+'</div>';
+}
+
+function vMarketi(){
+  let h = '<button class="btn sir" data-act="novi-market">+ Novi market</button>';
+  if(!db.marketi.length) return h + '<div class="prazno"><i>🏪</i><b>Nema marketa</b>Dodaj markete koje obilaziš.</div>';
+  const sve = redovi();
+  const red = m => {
+    const o = obilazak(m, sve);
+    const br = {isteklo:0, hitno:0, uskoro:0, ok:0};
+    o.st.forEach(x => br[x.s]++);
+    const naj = br.isteklo?'isteklo':br.hitno?'hitno':br.uskoro?'uskoro':o.n?'ok':'';
+    const rok = br.isteklo ? ' · <em class="isteklo">'+br.isteklo+' isteklo</em>'
+              : br.hitno ? ' · <em class="hitno">'+br.hitno+' hitno</em>' : '';
+    const desno = !o.n ? '' : o.ob===o.n ? '<b>✅</b><small>obiđen</small>' : '<b>'+o.ob+'/'+o.n+'</b><small>obiđeno</small>';
+    return '<button class="red '+naj+'" data-act="otvori-market" data-id="'+m.id+'">'
+      + '<span class="gl"><b>'+esc(m.naziv)+'</b><small>'+(m.adresa?esc(m.adresa)+' · ':'')+brArt(o.n)+rok+'</small></span>'
+      + '<span class="ob">'+desno+'</span><span class="str">›</span></button>';
+  };
+  const svi = db.marketi.slice().sort(poNazivu), dns = svi.filter(naRedu), ost = svi.filter(m => !naRedu(m));
+  h += '<h2 class="grupa">Danas na redu ('+dns.length+')</h2>'
+    + (dns.length ? dns.map(red).join('') : '<p class="info">Danas nema marketa na redu.</p>');
+  if(ost.length) h += '<h2 class="grupa">Ostali dani ('+ost.length+')</h2>' + ost.map(red).join('');
+  return h;
+}
+function vMarket(m){
+  const o = obilazak(m);
+  let h = '<p class="info">'+(m.adresa?esc(m.adresa)+' · ':'')+'Obilazak: '+daniTxt(m)+'</p>'
+    + '<button class="btn sir" data-act="dodaj-u-market">+ Dodaj artikal iz Leburića</button>';
+  if(!o.n) return h + '<div class="prazno"><i>🛒</i><b>Prazno</b>U ovom marketu još nema upisane robe.</div>';
+  const sve = o.ob===o.n;
+  h += '<div class="napredak'+(sve?' sve':'')+'"><b>'+(sve?'✅ Sve obiđeno danas':'Obiđeno '+o.ob+' od '+o.n)+'</b>'
+    + '<span><i style="width:'+Math.round(o.ob/o.n*100)+'%"></i></span></div>';
+  return h + o.st.map(redMarket).join('')
+    + '<button class="btn sek sir" data-act="poruka" style="margin-top:10px">✉️ Poruka o rokovima</button>';
+}
+
+function vPodaci(){
+  const p = db.postavke;
+  return (cuvanjeRadi?'':'<div class="upoz">Ovaj telefon ne dozvoljava čuvanje podataka za ovaj fajl. Otvori fajl u Chrome-u, inače se upisano gubi kad zatvoriš aplikaciju.</div>')
+    + '<div class="kart"><h3>Kada da upozorava</h3><p>Koliko dana prije isteka roba postaje narandžasta, a koliko žuta.</p>'
+    + '<label>Hitno (narandžasto), dana<input type="number" id="p-crveno" min="0" value="'+p.crveno+'"></label>'
+    + '<label>Uskoro (žuto), dana<input type="number" id="p-zuto" min="1" value="'+p.zuto+'"></label>'
+    + '<button class="btn sir" data-act="postavke" style="margin:0">Sačuvaj</button></div>'
+    + '<div class="kart"><h3>Sigurnosna kopija</h3><p>Podaci su samo u ovom telefonu. Povremeno sačuvaj kopiju, i istu kopiju koristi za prenos na drugi telefon.</p>'
+    + '<p><b>Zadnja kopija: '+(p.kopija?fmt(p.kopija):'još nije sačuvana')+'</b></p>'
+    + '<div class="dva" style="margin:0"><button class="btn" data-act="izvoz-fajl">Sačuvaj kopiju</button><button class="btn sek" data-act="izvoz-tekst">Kopiraj kao tekst</button></div></div>'
+    + '<div class="kart"><h3>Vrati kopiju</h3><p>Izaberi sačuvani fajl ili zalijepi tekst kopije. Ovo zamjenjuje sve podatke u ovom telefonu.</p>'
+    + '<label>Fajl kopije<input type="file" id="uvoz-fajl" accept=".json,application/json,text/plain"></label>'
+    + '<label>Ili zalijepi tekst<textarea id="uvoz-tekst" placeholder="zalijepi ovdje"></textarea></label>'
+    + '<button class="btn sek sir" data-act="uvoz-tekst" style="margin:0">Vrati iz teksta</button></div>'
+    + '<p class="info">Artikala: '+db.artikli.length+' · Marketa: '+db.marketi.length+' · Stavki u marketima: '+db.stavke.length+'</p>';
+}
+
+function render(){
+  let naslov = 'Rokovi trajanja', nazad = false, desno = '', h;
+  if(S.tab==='rokovi') h = vRokovi();
+  else if(S.tab==='leburic'){ naslov = 'Leburić — artikli'; h = vLeburic(); }
+  else if(S.tab==='marketi'){
+    const m = S.marketId && mkt(S.marketId);
+    if(m){
+      naslov = m.naziv; nazad = true; h = vMarket(m);
+      desno = '<button data-act="meni-market" aria-label="Uredi market">⋮</button>';
+    }
+    else { S.marketId = null; naslov = 'Marketi'; h = vMarketi(); }
+  }
+  else { naslov = 'Podaci'; h = vPodaci(); }
+
+  $('#hdr').innerHTML = (nazad?'<button data-act="nazad" aria-label="Nazad">←</button>':'') + '<h1>'+esc(naslov)+'</h1>' + desno;
+  $('#main').innerHTML = h;
+  const hitnih = redovi().filter(x => x.s==='isteklo' || x.s==='hitno').length;
+  $('#nav').innerHTML = [['rokovi','⏰','Rokovi'],['leburic','📦','Leburić'],['marketi','🏪','Marketi'],['podaci','💾','Podaci']].map(t =>
+    '<button class="'+(S.tab===t[0]?'akt':'')+'" data-act="tab" data-tab="'+t[0]+'"><i>'+t[1]+'</i>'+t[2]
+    + (t[0]==='rokovi' && hitnih ? '<span class="zn">'+hitnih+'</span>' : '')+'</button>').join('');
+}
+
+/* ---------- donji prozor za unos ---------- */
+let shCb = null, shDel = null, shPitanje = '';
+/* prozor za unos stoji gore i staje u dio ekrana iznad tastature */
+function vv(){
+  const v = window.visualViewport, el = $('#sheet');
+  if(!v || el.hidden) return;
+  el.style.top = v.offsetTop+'px'; el.style.height = v.height+'px';
+}
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize', vv);
+  window.visualViewport.addEventListener('scroll', vv);
+}
+function otvoriSheet(naslov, body, cb, o){
+  o = o || {};
+  const el = $('#sheet');
+  el.innerHTML = '<div class="poz" data-act="zatvori"></div><form autocomplete="off" novalidate><h2>'+naslov+'</h2>'
+    + '<div class="telo">'+body+'</div>'
+    + '<div class="dno"><div class="dugmad"><button type="button" class="btn sek" data-act="zatvori">'+(o.odustani||'Odustani')+'</button>'
+    + '<button type="submit" class="btn">'+(o.ok||'Sačuvaj')+'</button></div>'
+    + (o.del?'<button type="button" class="'+(o.delMali?'mali-brisi':'btn opasno brisi')+'" data-act="sh-del">'+o.del+'</button>':'')
+    + '</div></form>';
+  shCb = cb; shDel = o.onDel || null; shPitanje = o.pitanje || 'Sigurno ukloniti?';
+  el.hidden = false;
+  vv();
+  if(o.fokus){ const f = el.querySelector(o.fokus); if(f) f.focus(); }
+}
+function zatvoriSheet(){ const el = $('#sheet'); el.hidden = true; el.innerHTML = ''; shCb = null; shDel = null; }
+
+$('#sheet').addEventListener('submit', e => {
+  e.preventDefault();
+  if(!shCb) return;
+  const d = Object.fromEntries(new FormData(e.target));
+  const r = shCb(d);
+  if(r === false) return;
+  if(r !== 'ostani') zatvoriSheet();
+  sacuvaj(); render();
+});
+$('#sheet').addEventListener('change', e => {
+  if(e.target.id==='por-uskoro') $('#por-tekst').value = porukaTekst(porukaM, e.target.checked);
+});
+$('#sheet').addEventListener('input', e => {
+  if(e.target.name==='trazi'){ $('#sheet [name=artikalId]').value = ''; e.target.classList.remove('izabran'); puniArtikle(e.target.value); }
+  if(e.target.name==='rok') sredjujDatum(e.target, String(e.inputType||'').indexOf('delete')===0);
+});
+
+const poljeRok = v => '<label>Rok (dd.mm.gggg)<input name="rok" inputmode="numeric" maxlength="10" placeholder="dd.mm.gggg" value="'+(v?fmt(v):'')+'"></label>';
+const poljeKol = v => '<label>Količina<input type="number" name="kol" inputmode="decimal" step="any" min="0" value="'+(v==null?1:kolF(v))+'"></label>';
+
+function shArtikal(a){
+  otvoriSheet(a?'Uredi artikal':'Novi artikal',
+    '<label>Naziv artikla<input name="naziv" value="'+esc(a?a.naziv:'')+'"></label>'
+    + '<label>Šifra ili barkod (nije obavezno)<input name="sifra" value="'+esc(a?a.sifra:'')+'"></label>',
+    d => {
+      const naziv = d.naziv.trim();
+      if(!naziv){ toast('Upiši naziv'); return false; }
+      if(a){ a.naziv = naziv; a.sifra = d.sifra.trim(); }
+      else db.artikli.push({id:uid(), naziv:naziv, sifra:d.sifra.trim()});
+    },
+    a ? {del:'Obriši artikal', delMali:true, pitanje:'Obrisati „'+a.naziv+'"? Briše se i iz svih marketa.',
+         onDel:() => {
+           db.artikli = db.artikli.filter(x => x!==a);
+           db.stavke = db.stavke.filter(x => x.artikalId!==a.id);
+         }} : {fokus:'[name=naziv]'});
+}
+function shMarket(m){
+  const imam = m && imaDane(m) ? m.dani : [];
+  otvoriSheet(m?'Uredi market':'Novi market',
+    '<label>Naziv marketa<input name="naziv" value="'+esc(m?m.naziv:'')+'"></label>'
+    + '<label>Mjesto ili adresa (nije obavezno)<input name="adresa" value="'+esc(m?m.adresa:'')+'"></label>'
+    + '<div class="lbl">Dani obilaska (ako ništa ne označiš: svaki dan)</div><div class="dani">'
+    + DANI.map(d => '<label class="dan"><input type="checkbox" name="d'+d[0]+'"'+(imam.includes(d[0])?' checked':'')+'><span>'+d[1]+'</span></label>').join('')
+    + '</div>',
+    d => {
+      const naziv = d.naziv.trim();
+      if(!naziv){ toast('Upiši naziv'); return false; }
+      const dn = DANI.map(x => x[0]).filter(n => d['d'+n]);
+      if(m){ m.naziv = naziv; m.adresa = d.adresa.trim(); m.dani = dn; }
+      else db.marketi.push({id:uid(), naziv:naziv, adresa:d.adresa.trim(), dani:dn});
+    },
+    m ? {del:'Obriši market', delMali:true, pitanje:'Obrisati market „'+m.naziv+'" i svu robu upisanu u njemu?',
+         onDel:() => {
+           db.marketi = db.marketi.filter(x => x!==m);
+           db.stavke = db.stavke.filter(x => x.marketId!==m.id);
+           if(S.marketId===m.id) S.marketId = null;
+         }} : {fokus:'[name=naziv]'});
+}
+function shStavka(s){
+  const a = art(s.artikalId), m = mkt(s.marketId);
+  otvoriSheet(esc(a.naziv)+' — '+esc(m.naziv), '<div class="par">'+poljeRok(s.rok)+poljeKol(s.kol)+'</div>',
+    d => {
+      const rok = uzmiRok(d.rok, s.rok);
+      if(!rok) return false;
+      s.rok = rok; s.kol = num(d.kol);
+    },
+    {del:'Ukloni (prodano ili povučeno)', onDel:() => { db.stavke = db.stavke.filter(x => x!==s); }});
+}
+
+function puniArtikle(q){
+  const l = nadjiArtikle(q), MAX = 40, box = $('#izbor');
+  box.hidden = false;
+  box.innerHTML = l.length
+    ? l.slice(0,MAX).map(a => '<button type="button" class="opc" data-act="izaberi-artikal" data-id="'+a.id+'">'
+        + esc(a.naziv)+(a.sifra?'<small>'+esc(a.sifra)+'</small>':'')+'</button>').join('')
+      + (l.length>MAX?'<p>… još '+(l.length-MAX)+', kucaj dalje da suziš izbor</p>':'')
+    : '<p>Nema takvog artikla u Leburiću</p>';
+}
+function izaberiArtikal(a){
+  const inp = $('#sheet [name=trazi]');
+  $('#sheet [name=artikalId]').value = a.id;
+  inp.value = a.naziv; inp.classList.add('izabran');
+  $('#izbor').hidden = true;
+  $('#sheet [name=rok]').focus();
+}
+function shDodajUMarket(){
+  if(!db.artikli.length){ toast('Prvo upiši artikle u Leburić'); return; }
+  const m = mkt(S.marketId);
+  otvoriSheet('Dodaj u '+esc(m.naziv),
+    '<label>Artikal<input name="trazi" placeholder="kucaj naziv ili šifru" autocomplete="off" autocapitalize="off"></label>'
+    + '<input type="hidden" name="artikalId"><div id="izbor" class="izbor"></div>'
+    + '<div class="par">'+poljeRok('')+poljeKol(1)+'</div>',
+    d => {
+      let a = art(d.artikalId);
+      if(!a && d.trazi.trim()){ const l = nadjiArtikle(d.trazi); if(l.length===1) a = l[0]; }
+      if(!a){ toast('Izaberi artikal sa liste'); return false; }
+      const rok = uzmiRok(d.rok);
+      if(!rok) return false;
+      const kol = num(d.kol);
+      if(kol<=0){ toast('Upiši količinu'); return false; }
+      const p = db.stavke.find(x => x.marketId===m.id && x.artikalId===a.id && x.rok===rok);
+      if(p) p.kol += kol;
+      else db.stavke.push({id:uid(), marketId:m.id, artikalId:a.id, rok:rok, kol:kol, datum:danasStr()});
+      /* prozor ostaje otvoren za sljedeći artikal */
+      const inp = $('#sheet [name=trazi]');
+      $('#sheet [name=artikalId]').value = '';
+      inp.value = ''; inp.classList.remove('izabran');
+      $('#sheet [name=rok]').value = '';
+      $('#sheet [name=kol]').value = 1;
+      puniArtikle(''); inp.focus();
+      toast('Dodano: '+a.naziv+', rok '+fmt(rok));
+      return 'ostani';
+    }, {ok:'Dodaj', odustani:'Gotovo', fokus:'[name=trazi]'});
+  puniArtikle('');
+}
+
+let porukaM = null;
+function shPoruka(marketId){
+  porukaM = marketId || null;
+  let sa = false, t = porukaTekst(porukaM, false);
+  if(!t){ sa = true; t = porukaTekst(porukaM, true); }
+  if(!t){ toast('Nema robe kojoj ističe rok 🎉'); return; }
+  otvoriSheet('Poruka o rokovima',
+    '<label>Tekst (možeš ga ispraviti)<textarea id="por-tekst" name="tekst">'+esc(t)+'</textarea></label>'
+    + '<label class="chk"><input type="checkbox" id="por-uskoro"'+(sa?' checked':'')+'> Dodaj i robu do '+db.postavke.zuto+' dana</label>'
+    + '<div class="tri"><button type="button" class="btn sek" data-act="por-wa">WhatsApp</button>'
+    + '<button type="button" class="btn sek" data-act="por-viber">Viber</button>'
+    + '<button type="button" class="btn sek" data-act="por-kopiraj">Kopiraj</button></div>',
+    d => {
+      if(navigator.share) navigator.share({text:d.tekst}).catch(() => {});
+      else kopirajPoruku();
+      return 'ostani';
+    }, {ok:'Pošalji', odustani:'Zatvori'});
+}
+function kopirajPoruku(){
+  const ta = $('#por-tekst'), txt = ta.value;
+  const rezerva = () => {
+    ta.focus(); ta.select();
+    let ok = false; try{ ok = document.execCommand('copy'); }catch(e){}
+    toast(ok ? 'Kopirano, zalijepi u poruku' : 'Označi tekst i kopiraj ga ručno');
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(() => toast('Kopirano, zalijepi u poruku'), rezerva);
+  else rezerva();
+}
+
+/* ---------- kopija podataka ---------- */
+function uvezi(txt){
+  let d;
+  try{ d = JSON.parse(txt); }catch(e){ toast('Ovo nije ispravna kopija'); return; }
+  if(!d || !Array.isArray(d.artikli) || !Array.isArray(d.marketi) || !Array.isArray(d.stavke)){ toast('Ovo nije ispravna kopija'); return; }
+  if(!confirm('Zamijeniti sve podatke u ovom telefonu podacima iz kopije?')) return;
+  db = {artikli:d.artikli, marketi:d.marketi, stavke:d.stavke, postavke:Object.assign(prazna().postavke, d.postavke||{})};
+  db.postavke.kopija = danasStr();
+  sacuvaj(); S.tab = 'rokovi'; S.marketId = null; render(); toast('Kopija je vraćena');
+}
+function kopirajTekst(){
+  db.postavke.kopija = danasStr(); sacuvaj();
+  const txt = JSON.stringify(db);
+  const rezerva = () => {
+    const ta = $('#uvoz-tekst'); ta.value = txt; ta.focus(); ta.select();
+    let ok = false; try{ ok = document.execCommand('copy'); }catch(e){}
+    toast(ok ? 'Kopirano' : 'Tekst je u polju ispod, označi ga i kopiraj');
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(() => toast('Kopirano'), rezerva);
+  else rezerva();
+}
+function sacuvajFajl(){
+  try{
+    db.postavke.kopija = danasStr(); sacuvaj();
+    const b = new Blob([JSON.stringify(db)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(b); a.download = 'leburic-kopija-'+danasStr()+'.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    render(); toast('Kopija je u preuzimanjima');
+  }catch(e){ toast('Ne može fajl, koristi „Kopiraj kao tekst"'); }
+}
+
+/* ---------- klikovi ---------- */
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]');
+  if(!b) return;
+  const id = b.dataset.id;
+  switch(b.dataset.act){
+    case 'tab':
+      S.tab = b.dataset.tab; S.marketId = null; S.q = '';
+      render(); window.scrollTo(0,0); break;
+    case 'nazad':
+      if(gurnuto) history.back(); else { S.marketId = null; render(); }
+      break;
+    case 'zatvori': zatvoriSheet(); break;
+    case 'sh-del':
+      if(shDel && confirm(shPitanje)){ shDel(); zatvoriSheet(); sacuvaj(); render(); }
+      break;
+
+    case 'novi-artikal': shArtikal(null); break;
+    case 'uredi-artikal': { const a = art(id); if(a) shArtikal(a); break; }
+
+    case 'novi-market': shMarket(null); break;
+    case 'otvori-market': S.marketId = id; guraj(); render(); window.scrollTo(0,0); break;
+    case 'meni-market': { const m = mkt(S.marketId); if(m) shMarket(m); break; }
+    case 'kvacica': {
+      const s = db.stavke.find(x => x.id===id);
+      if(!s) break;
+      const dan = danasStr();
+      s.obidjen = s.obidjen===dan ? '' : dan;
+      sacuvaj(); render();
+      const m = mkt(s.marketId), o = m && obilazak(m);
+      if(s.obidjen && o && o.ob===o.n) toast('Market obiđen 🎉');
+      break;
+    }
+    case 'dodaj-u-market': shDodajUMarket(); break;
+    case 'poruka': shPoruka(S.marketId); break;
+    case 'poruka-sve': shPoruka(null); break;
+    case 'por-kopiraj': kopirajPoruku(); break;
+    case 'por-wa': window.open('https://wa.me/?text='+encodeURIComponent($('#por-tekst').value), '_blank'); break;
+    case 'por-viber': window.location.href = 'viber://forward?text='+encodeURIComponent($('#por-tekst').value); break;
+    case 'izaberi-artikal': { const a = art(id); if(a) izaberiArtikal(a); break; }
+    case 'uredi-stavku': { const s = db.stavke.find(x => x.id===id); if(s) shStavka(s); break; }
+
+    case 'postavke': {
+      const c = Math.max(0, Math.round(num($('#p-crveno').value)));
+      const z = Math.max(c+1, Math.round(num($('#p-zuto').value)));
+      Object.assign(db.postavke, {crveno:c, zuto:z});
+      sacuvaj(); render(); toast('Sačuvano');
+      break;
+    }
+    case 'izvoz-fajl': sacuvajFajl(); break;
+    case 'izvoz-tekst': kopirajTekst(); break;
+    case 'uvoz-tekst': {
+      const t = $('#uvoz-tekst').value.trim();
+      if(t) uvezi(t); else toast('Zalijepi tekst kopije');
+      break;
+    }
+  }
+});
+document.addEventListener('input', e => {
+  if(e.target.id==='q'){ S.q = e.target.value; $('#lista').innerHTML = listaArtikala(); }
+});
+document.addEventListener('change', e => {
+  if(e.target.id==='uvoz-fajl' && e.target.files[0]){
+    const fr = new FileReader();
+    fr.onload = () => uvezi(String(fr.result));
+    fr.readAsText(e.target.files[0]);
+    e.target.value = '';
+  }
+});
+
+/* kad se aplikacija vrati na ekran (npr. sutra ujutro), osvježi prikaz za novi dan */
+document.addEventListener('visibilitychange', () => { if(!document.hidden && $('#sheet').hidden) render(); });
+
+/* kad je aplikacija na internet adresi: radi i bez signala, i traži da telefon ne briše podatke */
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+if(navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+
+if(!db.postavke.prvi){ db.postavke.prvi = danasStr(); sacuvaj(); }
+render();
+if(!cuvanjeRadi) toast('Pažnja: ovaj telefon ne čuva podatke za ovaj fajl');
+</script>
+</body>
+</html>
