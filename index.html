@@ -2,7 +2,7 @@
 <html lang="bs">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#12a4ec">
 <title>Leburić rokovi</title>
@@ -151,7 +151,7 @@ label.chk input{width:22px;height:22px;min-height:0;margin:0;flex:none}
 }
 
 input,select,textarea{
-  width:100%;font:inherit;color:var(--ink);background:var(--card);
+  width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--card);
   border:2px solid var(--line);border-radius:14px;padding:12px;min-height:50px;
 }
 textarea{min-height:90px;font-size:16px}
@@ -555,6 +555,7 @@ let shCb = null, shDel = null, shPitanje = '';
 function vv(){
   const v = window.visualViewport, el = $('#sheet');
   if(!v || el.hidden) return;
+  if(Math.abs(v.scale-1)>0.01){ el.style.top = ''; el.style.height = ''; return; }   /* ekran je zumiran: ne diraj */
   el.style.top = v.offsetTop+'px'; el.style.height = v.height+'px';
 }
 if(window.visualViewport){
